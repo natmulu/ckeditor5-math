@@ -13,7 +13,8 @@
   ],
   "main": "src/index.ts",
   "dependencies": {
-    "ckeditor5": "43.2.0"
+    "ckeditor5": "43.2.0",
+    "mathlive": "^0.103.0"
   },
   "devDependencies": {
     "@ckeditor/ckeditor5-autoformat": "43.2.0",

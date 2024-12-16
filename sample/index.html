@@ -25,65 +25,7 @@
 </head>
 <body>
 
-<h1>CKEditor 5 with ckeditor5-math – Development Sample</h1>
-
-<div id="editor">
-    <h2>Development environment</h2>
-    <p>
-        This is a demo of the <a href="https://ckeditor.com/docs/ckeditor5/latest/builds/guides/overview.html#classic-editor">classic editor build</a> that loads the <code>Math</code> and <code>AutoformatMath</code> plugin.
-    </p>
-    <p>
-        <code>Math</code> inserts mathematical formulas into the editor. You can click the CKEditor 5 Math icon in the toolbar and see the results.
-    </p>
-
-    <p>
-        <script type="math/tex">e=mc^2</script>
-    </p>
-
-    <p>
-        <script type="math/tex; mode=display">e=mc^2</script>
-    </p>
-
-    <p>
-       This should show "\test" as ≠ via katexRenderOptions.macros:
-       <script type="math/tex">\test</script>
-    </p>
-
-    <!-- Quill Style Tag -->
-    <p>
-        <span class="ql-formula" data-value="e=mc^2"></span>
-    </p>
-
-    <h3>The directory structure</h3>
-
-    <p>
-        The code snippet below presents the directory structure.
-    </p>
-
-    <pre><code class="language-plaintext">.
-├─ sample
-│  ├─ dll.html          # The editor initialized using the DLL builds. Check README for details.
-│  ├─ index.html        # The currently displayed file.
-│  └─ ckeditor.js       # The editor initialization script.
-├─ src
-│  ├─ autoformatmath.js # The AutoformatMath plugin.
-│  ├─ math.js           # The Math plugin.
-│  ├─ index.js          # The modules exported by the package when using the DLL builds.
-│  └─ **/*.js           # JavaScript source files.
-├─ tests
-│  └─ **/*.js           # Test files
-├─ theme
-│  ├─ icons
-│  │  ├─ math.svg       # The Math icon displayed in the toolbar.
-│  └─ mathform.css      # Math editor styles.
-├─ .editorconfig
-├─ ...
-└─ README.md</code></pre>
-
-    <h3>Reporting issues</h3>
-    <p>If you found a problem with CKEditor 5 or the package generator, please, report an issue:</p>
-    <p><a href="https://github.com/isaul32/ckeditor5-math/issues">CKEditor 5 Math</a></p>
-</div>
+<div id="editor"></div>
 
 <script src="./ckeditor.dist.js"></script>
 </body>

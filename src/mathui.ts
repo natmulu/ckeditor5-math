@@ -3,6 +3,7 @@ import MainFormView from './ui/mainformview';
 import mathIcon from '../theme/icons/math.svg';
 import { Plugin } from 'ckeditor5/src/core';
 import { ClickObserver } from 'ckeditor5/src/engine';
+import { MathfieldElement } from 'mathlive';
 import {
 	ButtonView,
 	ContextualBalloon,
@@ -111,6 +112,10 @@ export default class MathUI extends Plugin {
 			this._closeFormView();
 		} );
 
+		this.listenTo( formView, 'mathlive', () => {
+			this._showMathLiveForm();
+		} );
+
 		// Close plugin ui, if esc is pressed (while ui is focused)
 		formView.keystrokes.set( 'esc', ( _data, cancel ) => {
 			this._closeFormView();
@@ -178,10 +183,105 @@ export default class MathUI extends Plugin {
 		this._removeFormView();
 	}
 
+	private _showMathLiveForm() {
+		try {
+			const editor = this.editor;
+			const mathLiveEditor = new MathfieldElement();
+			mathLiveEditor.style.width = '550px';
+
+			const dialog = document.createElement( 'div' );
+			dialog.id = 'did';
+			dialog.style.position = 'fixed';
+			dialog.style.top = '30%';
+			dialog.style.left = '50%';
+			dialog.style.transform = 'translate(-50%, -50%)';
+			dialog.style.backgroundColor = '#f9f9f9';
+			dialog.style.padding = '20px';
+			dialog.style.border = '1px solid #ddd';
+			dialog.style.borderRadius = '8px';
+			dialog.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+			dialog.style.fontFamily = 'Arial, sans-serif';
+			dialog.style.fontSize = '16px';
+			dialog.style.zIndex = '3000';
+			dialog.style.width = '550px';
+
+			dialog.appendChild( mathLiveEditor );
+			mathLiveEditor.setValue( this.formView?.equation );
+
+			const cancelButton = document.createElement( 'button' );
+			cancelButton.textContent = 'Cancel';
+			cancelButton.style.margin = '16px';
+			cancelButton.style.padding = '10px 20px';
+			cancelButton.style.backgroundColor = '#f44336';
+			cancelButton.style.color = '#fff';
+			cancelButton.style.border = 'none';
+			cancelButton.style.borderRadius = '5px';
+			cancelButton.style.cursor = 'pointer';
+			cancelButton.style.fontFamily = 'Arial, sans-serif';
+			cancelButton.style.fontSize = '16px';
+			cancelButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+			cancelButton.style.transition = 'background-color 0.3s, transform 0.2s';
+
+			cancelButton.addEventListener( 'mouseover', () => {
+				cancelButton.style.backgroundColor = '#d32f2f';
+				cancelButton.style.transform = 'scale(1.05)';
+			} );
+
+			cancelButton.addEventListener( 'mouseout', () => {
+				cancelButton.style.backgroundColor = '#f44336';
+				cancelButton.style.transform = 'scale(1)';
+			} );
+
+			cancelButton.onclick = () => {
+				this._removeDialogue();
+			}
+
+			const insertButton = document.createElement( 'button' );
+			insertButton.textContent = 'Insert Equation';
+			insertButton.style.margin = '16px';
+			insertButton.style.padding = '10px 20px';
+			insertButton.style.backgroundColor = '#007BFF';
+			insertButton.style.color = '#fff';
+			insertButton.style.border = 'none';
+			insertButton.style.borderRadius = '5px';
+			insertButton.style.cursor = 'pointer';
+			insertButton.style.fontFamily = 'Arial, sans-serif';
+			insertButton.style.fontSize = '16px';
+			insertButton.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
+			insertButton.style.transition = 'background-color 0.3s, transform 0.2s';
+
+			insertButton.addEventListener( 'mouseover', () => {
+				insertButton.style.backgroundColor = '#0056b3';
+				insertButton.style.transform = 'scale(1.05)';
+			} );
+
+			insertButton.addEventListener( 'mouseout', () => {
+				insertButton.style.backgroundColor = '#007BFF';
+				insertButton.style.transform = 'scale(1)';
+			} );
+
+			insertButton.onclick = () => {
+				const mathExpression = mathLiveEditor.getValue();
+				if ( mathExpression ) {
+					editor.execute( 'math', mathExpression );
+				}
+				this._removeDialogue();
+			};
+
+			dialog.appendChild( insertButton );
+			dialog.appendChild( cancelButton );
+
+			document.body.appendChild( dialog );
+		} catch ( error ) {
+			console.error( 'Error during math editor insertion:', error );
+		}
+	}
+
 	private _closeFormView() {
 		const mathCommand = this.editor.commands.get( 'math' );
 		if ( mathCommand?.value != null ) {
 			this._removeFormView();
+			this._removeDialogue();
 		} else {
 			this._hideUI();
 		}
@@ -200,6 +300,13 @@ export default class MathUI extends Plugin {
 			}
 
 			this.editor.editing.view.focus();
+		}
+	}
+
+	private _removeDialogue() {
+		const dialog = document.getElementById( 'did' );
+		if ( dialog ) {
+			dialog.remove();
 		}
 	}
 

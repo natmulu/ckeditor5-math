@@ -18,7 +18,7 @@ import MathView from './mathview';
 import '../../theme/mathform.css';
 import type { KatexOptions } from '../typings-external';
 
-const { check: checkIcon, cancel: cancelIcon } = icons;
+const { check: checkIcon, cancel: cancelIcon, pencil: pencilIcon } = icons;
 
 class MathInputView extends LabeledFieldView<InputTextView> {
 	public value: null | string = null;
@@ -31,6 +31,7 @@ class MathInputView extends LabeledFieldView<InputTextView> {
 
 export default class MainFormView extends View {
 	public saveButtonView: ButtonView;
+	public mathLiveButtonView: ButtonView;
 	public mathInputView: MathInputView;
 	public displayButtonView: SwitchButtonView;
 	public cancelButtonView: ButtonView;
@@ -64,6 +65,9 @@ export default class MainFormView extends View {
 		// Submit button
 		this.saveButtonView = this._createButton( t( 'Save' ), checkIcon, 'ck-button-save', null );
 		this.saveButtonView.type = 'submit';
+
+		// Math Button
+		this.mathLiveButtonView = this._createButton( t( 'Math Input' ), pencilIcon, 'ck-math-button-class', 'mathlive' );
 
 		// Equation input
 		this.mathInputView = this._createMathInput();
@@ -121,6 +125,7 @@ export default class MainFormView extends View {
 					},
 					children
 				},
+				this.mathLiveButtonView,
 				this.saveButtonView,
 				this.cancelButtonView
 			]
@@ -139,6 +144,7 @@ export default class MainFormView extends View {
 		const childViews = [
 			this.mathInputView,
 			this.displayButtonView,
+			this.mathLiveButtonView,
 			this.saveButtonView,
 			this.cancelButtonView
 		];
@@ -192,7 +198,7 @@ export default class MainFormView extends View {
 		// Create equation input
 		const mathInput = new MathInputView( this.locale );
 		const fieldView = mathInput.fieldView;
-		mathInput.infoText = t( 'Insert equation in TeX format.' );
+		mathInput.infoText = t( 'Type the equation in TeX format or use a Keyboard.' );
 
 		const onInput = () => {
 			if ( fieldView.element != null ) {
@@ -216,7 +222,7 @@ export default class MainFormView extends View {
 					this.mathView.value = equationInput;
 				}
 
-				this.saveButtonView.isEnabled = !!equationInput;
+				// this.saveButtonView.isEnabled = !!equationInput;
 			}
 		};
 
